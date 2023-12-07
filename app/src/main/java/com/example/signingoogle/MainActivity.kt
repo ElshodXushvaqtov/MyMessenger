@@ -2,7 +2,6 @@ package com.example.signingoogle
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,12 +16,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.signingoogle.data.UserData
 import com.example.signingoogle.ui.theme.SignInGoogleTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.database
 
 private lateinit var auth: FirebaseAuth
 private var mAuth = FirebaseAuth.getInstance()
@@ -90,7 +92,15 @@ class MainActivity : ComponentActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     val user = mAuth.currentUser
                     if (user != null) {
-                        Log.d("AAA", "firebaseAuthWithGoogle: ${user.email}")
+
+                        val userData = UserData(
+                            user.displayName,
+                            user.email,
+                            user.uid,
+                            user.photoUrl.toString()
+                        )
+                        setUser(userData)
+
                     }
                 } else {
                     // If sign in fails, display a message to the user.
@@ -99,20 +109,28 @@ class MainActivity : ComponentActivity() {
                 }
             }
     }
+
+    private fun setUser(userData: UserData) {
+
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.run {
+            val userIdReference = Firebase.database.reference
+                .child("users").child(user.uid)
+            userIdReference.setValue(userData)
+        }
+
+    }
+
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun Greeting() {
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     SignInGoogleTheme {
-        Greeting("Android")
+        Greeting()
     }
 }
