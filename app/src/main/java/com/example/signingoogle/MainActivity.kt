@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -16,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.AsyncImage
 import com.example.signingoogle.data.UserData
 import com.example.signingoogle.ui.theme.SignInGoogleTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -24,7 +28,10 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.auth
 import com.google.firebase.database.database
+import com.google.firebase.database.getValue
+import org.jetbrains.annotations.Async
 
 private lateinit var auth: FirebaseAuth
 private var mAuth = FirebaseAuth.getInstance()
@@ -49,7 +56,7 @@ class MainActivity : ComponentActivity() {
                     val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
                     Column(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.wrapContentSize(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -59,11 +66,35 @@ class MainActivity : ComponentActivity() {
                             startActivityForResult(signInIntent, 1)
 
                         }) {
+
                             Text(text = "Sign In Google")
 
                         }
-                    }
 
+                        Button(onClick = {
+
+                            Firebase.auth.signOut()
+
+                        }) {
+
+                            Text(text = "Sign Out")
+
+                        }
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+
+
+                        if (getUser() != null) {
+                            Text(text = "Name: ${getUser()?.name}")
+                            AsyncImage(
+                                model = "Image: ${getUser()?.photo}",
+                                contentDescription = null,
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -121,16 +152,28 @@ class MainActivity : ComponentActivity() {
 
     }
 
+    private fun getUser(): UserData? {
+        var userData: UserData? = null
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.run {
+            val userIdReference = Firebase.database.reference
+                .child("users").child(uid)
+
+            userIdReference.get().addOnSuccessListener { dataSnapShot ->
+                userData = dataSnapShot.getValue<UserData>()
+                //successfully read UserData from the database
+            }
+        }
+        return userData
+
+
+    }
+
 }
 
 @Composable
-fun Greeting() {
-}
+fun Greeting() {}
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    SignInGoogleTheme {
-        Greeting()
-    }
-}
+fun GreetingPreview() {}
