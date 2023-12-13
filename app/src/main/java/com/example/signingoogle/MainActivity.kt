@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
 
                         Button(onClick = {
 
-                            Firebase.auth.signOut()
+                            mGoogleSignInClient.signOut()
 
                         }) {
 
