@@ -118,14 +118,15 @@ class MainActivity : ComponentActivity() {
                             children.forEach {
                                 val user = it.getValue(UserData::class.java)
                                 if (user != null && user.uid == userData.uid) {
-                                    b=false
+                                    b = false
                                 }
                             }
-                            if(b){
+                            if (b) {
                                 setUser(userData)
                             }
 
                         }
+
                         override fun onCancelled(error: DatabaseError) {
                             Log.d("TAG", "onCancelled: ${error.message}")
                         }
@@ -145,7 +146,7 @@ class MainActivity : ComponentActivity() {
 
     private fun setUser(userData: UserData) {
         val userIdReference = Firebase.database.reference
-            .child("users").child(userData.uid?:"")
+            .child("users").child(userData.uid ?: "")
         userIdReference.setValue(userData).addOnSuccessListener {
             val i = Intent(this, ContactActivity::class.java)
             i.putExtra("uid", userData.uid)
