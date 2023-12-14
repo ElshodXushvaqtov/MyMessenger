@@ -57,11 +57,13 @@ class ContactActivity : ComponentActivity() {
                     val reference = Firebase.database.reference.child("users")
                     reference.addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            val children = snapshot.children
+                            val u = snapshot.children
                             userList.clear()
-                            children.forEach {
-                                val user = it.getValue(UserData::class.java)
-                                userList.add(user ?: UserData())
+                            u.forEach {
+                                val userData = it.getValue(UserData::class.java)
+                                if (userData != null && uid != userData.uid) {
+                                    userList.add(userData)
+                                }
                             }
 
                         }
@@ -73,7 +75,6 @@ class ContactActivity : ComponentActivity() {
                     })
 
                     LazyColumn() {
-
                         items(userList) {
                             Row(
                                 Modifier
@@ -84,7 +85,7 @@ class ContactActivity : ComponentActivity() {
                                             this@ContactActivity,
                                             MessageActivity::class.java
                                         )
-                                        i.putExtra("uid",uid)
+                                        i.putExtra("uid", uid)
                                         i.putExtra("useruid", it.uid)
                                         startActivity(i)
                                     },
@@ -112,8 +113,6 @@ class ContactActivity : ComponentActivity() {
             }
         }
     }
-
-
 }
 
 @Composable
