@@ -73,7 +73,7 @@ fun Splash() {
         Row(
             modifier = Modifier
                 .wrapContentSize()
-                .padding(start = 290.dp, bottom = 70.dp),
+                .padding(start = 290.dp, bottom = 80.dp),
             horizontalArrangement = Arrangement.Center
         ) {
 
@@ -85,7 +85,7 @@ fun Splash() {
                 IconComponentImageVector(icon = Icons.Default.PlayArrow, size = 30.dp)
             }
 
-            Text(text = "Skip", modifier = Modifier.padding(top = 13.dp))
+            Text(text = "Skip", modifier = Modifier.padding(top = 10.dp))
 
         }
         LottieAnimation(composition = animation)
