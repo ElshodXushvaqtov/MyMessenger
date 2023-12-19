@@ -168,13 +168,12 @@ class MessageActivity : ComponentActivity() {
                         }
 
                     }
-
                 }
             }
         }
     }
 }
-
+//
 //@Composable
 //fun Greeting3() {
 //    Column(
@@ -215,8 +214,11 @@ class MessageActivity : ComponentActivity() {
 //        )
 //    }
 //}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview3() {
-    SignInGoogleTheme {}
+    SignInGoogleTheme {
+
+    }
 }
