@@ -69,6 +69,7 @@ class MessageActivity : ComponentActivity() {
                     val uid = intent.getStringExtra("uid")
                     val useruid = intent.getStringExtra("useruid")
 
+                    val context = LocalContext.current
 
                     var text = remember {
                         mutableStateOf(TextFieldValue(""))
@@ -138,7 +139,9 @@ class MessageActivity : ComponentActivity() {
                     val m = Message(useruid, uid, text.value.text, currentDateAndTime)
 
                     Row(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.Bottom
                     ) {
@@ -146,18 +149,50 @@ class MessageActivity : ComponentActivity() {
                             text.value,
                             onValueChange = {
                                 text.value = it
-                            })
+                            },
+                            placeholder = { Text(text = "New message") },
+                            label = { Text("Enter text") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    Toast.makeText(context, "Message sent!", Toast.LENGTH_SHORT)
+                                        .show()
+                                    val reference = Firebase.database.reference.child("users")
+                                    val key = reference.push().key.toString()
+                                    reference.child(uid)
+                                        .child("message")
+                                        .child(useruid)
+                                        .child(key)
+                                        .setValue(m)
+                                    reference.child(useruid)
+                                        .child("message")
+                                        .child(uid)
+                                        .child(key)
+                                        .setValue(m)
+
+                                    text.value = TextFieldValue("")
+                                }
+                            ))
+
+
                         Button(onClick = {
                             val reference = Firebase.database.reference.child("users")
                             val key = reference.push().key.toString()
-                            reference.child(uid ?: "")
+                            reference.child(uid)
                                 .child("message")
-                                .child(useruid ?: "")
+                                .child(useruid)
                                 .child(key)
                                 .setValue(m)
-                            reference.child(useruid ?: "")
+                            reference.child(useruid)
                                 .child("message")
-                                .child(uid ?: "")
+                                .child(uid)
                                 .child(key)
                                 .setValue(m)
 
@@ -173,47 +208,6 @@ class MessageActivity : ComponentActivity() {
         }
     }
 }
-//
-//@Composable
-//fun Greeting3() {
-//    Column(
-//        modifier = Modifier
-//            .padding(16.dp)
-//            .fillMaxSize(),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Bottom
-//    ) {
-//
-//        var text by remember { mutableStateOf("") }
-//
-//        val context = LocalContext.current
-//
-//        val i = Intent(context, ContactActivity::class.java)
-//
-//        TextField(
-//            value = text,
-//            onValueChange = { newText ->
-//                text = newText
-//            },
-//            placeholder = { Text(text = "New message") },
-//            label = { Text("Enter text") },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(8.dp),
-//            keyboardOptions = KeyboardOptions.Default.copy(
-//                keyboardType = KeyboardType.Text,
-//                imeAction = ImeAction.Done
-//            ),
-//            keyboardActions = KeyboardActions(
-//                onDone = {
-//                    Toast.makeText(context, "Message sent!", Toast.LENGTH_SHORT).show()
-//                    context.startActivity(i)
-//                }
-//            )
-//
-//        )
-//    }
-//}
 
 @Preview(showBackground = true)
 @Composable
