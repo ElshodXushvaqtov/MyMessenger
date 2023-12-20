@@ -15,12 +15,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -77,37 +81,42 @@ class MessageActivity : ComponentActivity() {
 
                     LazyColumn() {
                         items(messageList) {
-                            val backgroundColor = if (it.from == uid) Color.Blue else Color.Gray
-                            val paddingStart =
-                                if (it.from == uid) TextAlign.End else TextAlign.Start
+                            val backgroundColor = if (it.from == uid) Color(0xFF9CFFE3) else Color.Gray
+                            val specificAlign =
+                                if (it.from == uid) Alignment.End else Alignment.Start
 
-                            Row(
+                            Column(
                                 Modifier
                                     .fillMaxWidth()
-                                    .padding(5.dp)
+                                    .padding(10.dp),
+                                horizontalAlignment = specificAlign
                             ) {
-                                Box(
+                                Card(
                                     modifier = Modifier
-                                        .padding(5.dp)
-                                        .background(
-                                            color = backgroundColor,
-                                            shape = RoundedCornerShape(8.dp)
-                                        )
-                                        .padding(10.dp)
-                                ) {
-                                    Text(
-                                        text = it.text ?: "", color = Color.White,
-                                        fontSize = 16.sp,
-                                        textAlign = paddingStart,
-                                        modifier = Modifier.padding(bottom = 8.dp)
-                                    )
-                                    Text(
-                                        text = it.date ?: "", color = Color.White,
-                                        fontSize = 16.sp,
-                                        textAlign = TextAlign.End,
-                                        modifier = Modifier.padding(bottom = 8.dp)
-                                    )
-                                }
+                                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                                    shape = RoundedCornerShape(8.dp),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = backgroundColor
+                                    ),
+                                    content = {
+                                        Column(
+                                            modifier = Modifier
+                                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                                        ) {
+                                            Text(
+                                                text = it.text ?: "",
+                                                color = Color.Black,
+                                                fontSize = 16.sp
+                                            )
+                                            Text(
+                                                text = it.date ?: "",
+                                                color = Color.Black,
+                                                fontSize = 8.sp,
+                                                textAlign = TextAlign.Start
+                                            )
+                                        }
+                                    }
+                                )
 
                             }
 
@@ -140,8 +149,7 @@ class MessageActivity : ComponentActivity() {
 
                     Row(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
+                            .fillMaxSize(),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.Bottom
                     ) {
@@ -153,7 +161,6 @@ class MessageActivity : ComponentActivity() {
                             placeholder = { Text(text = "New message") },
                             label = { Text("Enter text") },
                             modifier = Modifier
-                                .fillMaxWidth()
                                 .padding(8.dp),
 
                             keyboardOptions = KeyboardOptions.Default.copy(

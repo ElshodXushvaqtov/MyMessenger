@@ -1,8 +1,11 @@
 package com.example.signingoogle
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -13,8 +16,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.example.signingoogle.data.UserData
 import com.example.signingoogle.ui.theme.SignInGoogleTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -31,6 +38,9 @@ import com.google.firebase.ktx.Firebase
 private lateinit var auth: FirebaseAuth
 private var mAuth = FirebaseAuth.getInstance()
 
+@SuppressLint("StaticFieldLeak")
+private var context: Context? = null
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,13 +52,12 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     auth = FirebaseAuth.getInstance()
+                    context = LocalContext.current
                     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken("158053140209-0qbat8b2r9rop9rvvorlhqbd313vujb5.apps.googleusercontent.com")
                         .requestEmail()
                         .build()
-
                     val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-
                     Column(
                         modifier = Modifier.wrapContentSize(),
                         verticalArrangement = Arrangement.Center,
@@ -57,6 +66,7 @@ class MainActivity : ComponentActivity() {
                         Button(onClick = {
 
                             val signInIntent = mGoogleSignInClient.signInIntent
+                            Toast.makeText(context,"Successfully signed in!",Toast.LENGTH_SHORT).show()
                             startActivityForResult(signInIntent, 1)
 
                         }) {
@@ -65,15 +75,15 @@ class MainActivity : ComponentActivity() {
 
                         }
 
-                        Button(onClick = {
-
-                            mGoogleSignInClient.signOut()
-
-                        }) {
-
-                            Text(text = "Sign Out")
-
-                        }
+//                        Button(onClick = {
+//
+//                            mGoogleSignInClient.signOut()
+//
+//                        }) {
+//
+//                            Text(text = "Sign Out")
+//
+//                        }
                     }
                 }
             }
@@ -135,6 +145,9 @@ class MainActivity : ComponentActivity() {
 
                     val i = Intent(this, ContactActivity::class.java)
                     i.putExtra("uid", userData.uid)
+                    i.putExtra("userEmail", userData.email)
+                    i.putExtra("userName", userData.name)
+                    i.putExtra("userPhoto", userData.photo)
                     startActivity(i)
 
 
@@ -148,6 +161,7 @@ class MainActivity : ComponentActivity() {
         val userIdReference = Firebase.database.reference
             .child("users").child(userData.uid ?: "")
         userIdReference.setValue(userData).addOnSuccessListener {
+
             val i = Intent(this, ContactActivity::class.java)
             i.putExtra("uid", userData.uid)
             startActivity(i)

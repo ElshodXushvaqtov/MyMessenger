@@ -12,12 +12,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,11 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.example.signingoogle.data.IconComponentImageVector
 import com.example.signingoogle.ui.theme.SignInGoogleTheme
 import kotlinx.coroutines.delay
 
@@ -57,9 +51,10 @@ class SplashActivity : ComponentActivity() {
 fun Splash() {
     val animation by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.splash))
     val context = LocalContext.current
-    val i = Intent(context, MainActivity::class.java)
-
-
+    val iM = Intent(context, MainActivity::class.java)
+    val iC = Intent(context, ContactActivity::class.java)
+//    val sharedPreference =
+//    var editor = sharedPreference.edit()
 
     Column(
 
@@ -75,25 +70,13 @@ fun Splash() {
                 .wrapContentSize()
                 .padding(start = 290.dp, bottom = 80.dp),
             horizontalArrangement = Arrangement.Center
-        ) {
-
-
-            IconButton(
-
-                onClick = { context.startActivity(i) }) {
-
-                IconComponentImageVector(icon = Icons.Default.PlayArrow, size = 30.dp)
-            }
-
-            Text(text = "Skip", modifier = Modifier.padding(top = 10.dp))
-
-        }
+        ) {}
         LottieAnimation(composition = animation)
         LaunchedEffect(key1 = true) {
 
             delay(10000L)
 
-            context.startActivity(i)
+            context.startActivity(iM)
 
         }
 
