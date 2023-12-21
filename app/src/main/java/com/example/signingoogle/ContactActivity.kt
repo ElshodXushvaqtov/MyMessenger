@@ -142,7 +142,8 @@ class ContactActivity : ComponentActivity() {
                                 placeholder = painterResource(R.drawable.user),
                                 contentDescription = ("no image"),
                                 contentScale = ContentScale.Crop,
-                                modifier = Modifier.clip(CircleShape)
+                                modifier = Modifier.clip(CircleShape),
+                                alignment = Alignment.TopEnd
                             )
                         }
                     }
