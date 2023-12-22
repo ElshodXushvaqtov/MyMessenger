@@ -83,16 +83,6 @@ class MainActivity : ComponentActivity() {
                             Text(text = "Sign In Google")
 
                         }
-
-//                        Button(onClick = {
-//
-//                            mGoogleSignInClient.signOut()
-//
-//                        }) {
-//
-//                            Text(text = "Sign Out")
-//
-//                        }
                     }
                 }
             }
@@ -136,7 +126,7 @@ class MainActivity : ComponentActivity() {
                     editor.putBoolean("isLogged", true)
                     editor.putString("userID", userData.uid)
                     editor.putString("uPhoto", userData.photo)
-                    editor.putString("uName",userData.name)
+                    editor.putString("uName", userData.name)
                     editor.putString("uEmail", userData.email)
                     editor.apply()
                     val reference = Firebase.database.reference.child("users")

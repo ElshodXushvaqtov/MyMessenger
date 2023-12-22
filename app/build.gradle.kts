@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-    implementation ("androidx.preference:preference-ktx:1.2.1")
+    implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("com.airbnb.android:lottie-compose:6.2.0")
     implementation("com.google.firebase:firebase-auth:22.3.0")

@@ -66,9 +66,6 @@ fun Splash() {
     val iM = Intent(context, MainActivity::class.java)
     val iC = Intent(context, ContactActivity::class.java)
     val sharedPreference = context.getSharedPreferences("myShared", Context.MODE_PRIVATE)
-//    val editor = sharedPreference.edit()
-//    editor.putBoolean("isLogged", false)
-//    editor.apply()
     val isLogged =
         context.getSharedPreferences("myShared", Context.MODE_PRIVATE).getBoolean("isLogged", false)
 
@@ -101,25 +98,12 @@ fun Splash() {
 
                 context.startActivity(iM)
             }
-//            context.startActivity(iM)
         }
 
 
     }
 
 }
-
-//fun isLogged(): Boolean {
-//
-//
-//    sharedPreference = context.getSharedPreferences("myShared", Context.MODE_PRIVATE)
-//
-//
-//    is_logged = sharedPreference.getBoolean("isLogged", false)
-//
-//    return is_logged
-//
-//}
 
 @Preview(showBackground = true)
 @Composable

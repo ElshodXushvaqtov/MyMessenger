@@ -81,7 +81,8 @@ class MessageActivity : ComponentActivity() {
 
                     LazyColumn() {
                         items(messageList) {
-                            val backgroundColor = if (it.from == uid) Color(0xFF9CFFE3) else Color.Gray
+                            val backgroundColor =
+                                if (it.from == uid) Color(0xFF9CFFE3) else Color.Gray
                             val specificAlign =
                                 if (it.from == uid) Alignment.End else Alignment.Start
 
