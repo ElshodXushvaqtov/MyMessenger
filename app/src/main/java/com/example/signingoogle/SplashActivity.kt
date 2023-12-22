@@ -34,9 +34,6 @@ import com.example.signingoogle.ui.theme.SignInGoogleTheme
 import kotlinx.coroutines.delay
 import kotlin.properties.Delegates
 
-//private lateinit var sharedPreference: SharedPreferences
-//private lateinit var editor: Editor
-//private var is_logged by Delegates.notNull<Boolean>()
 
 @SuppressLint("StaticFieldLeak")
 private lateinit var context: Context
