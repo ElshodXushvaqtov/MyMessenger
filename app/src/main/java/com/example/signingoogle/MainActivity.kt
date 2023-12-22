@@ -3,6 +3,8 @@ package com.example.signingoogle
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -34,9 +36,14 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlin.properties.Delegates
 
 private lateinit var auth: FirebaseAuth
 private var mAuth = FirebaseAuth.getInstance()
+
+private lateinit var sharedPreferences: SharedPreferences
+private lateinit var editor: Editor
+private var isLogged by Delegates.notNull<Boolean>()
 
 @SuppressLint("StaticFieldLeak")
 private var context: Context? = null
@@ -66,10 +73,12 @@ class MainActivity : ComponentActivity() {
                         Button(onClick = {
 
                             val signInIntent = mGoogleSignInClient.signInIntent
-                            Toast.makeText(context,"Successfully signed in!",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Successfully signed in!", Toast.LENGTH_SHORT)
+                                .show()
                             startActivityForResult(signInIntent, 1)
 
                         }) {
+
 
                             Text(text = "Sign In Google")
 
@@ -120,6 +129,16 @@ class MainActivity : ComponentActivity() {
                         user?.email,
                         user?.photoUrl.toString()
                     )
+                    sharedPreferences =
+                        context!!.getSharedPreferences("myShared", Context.MODE_PRIVATE)
+
+                    editor = sharedPreferences.edit()
+                    editor.putBoolean("isLogged", true)
+                    editor.putString("userID", userData.uid)
+                    editor.putString("uPhoto", userData.photo)
+                    editor.putString("uName",userData.name)
+                    editor.putString("uEmail", userData.email)
+                    editor.apply()
                     val reference = Firebase.database.reference.child("users")
                     var b = true
                     reference.addValueEventListener(object : ValueEventListener {

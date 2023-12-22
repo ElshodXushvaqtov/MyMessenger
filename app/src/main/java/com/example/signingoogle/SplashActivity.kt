@@ -1,8 +1,12 @@
 package com.example.signingoogle
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -28,6 +32,14 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.signingoogle.ui.theme.SignInGoogleTheme
 import kotlinx.coroutines.delay
+import kotlin.properties.Delegates
+
+//private lateinit var sharedPreference: SharedPreferences
+//private lateinit var editor: Editor
+//private var is_logged by Delegates.notNull<Boolean>()
+
+@SuppressLint("StaticFieldLeak")
+private lateinit var context: Context
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : ComponentActivity() {
@@ -50,11 +62,15 @@ class SplashActivity : ComponentActivity() {
 @Composable
 fun Splash() {
     val animation by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.splash))
-    val context = LocalContext.current
+    context = LocalContext.current
     val iM = Intent(context, MainActivity::class.java)
     val iC = Intent(context, ContactActivity::class.java)
-//    val sharedPreference =
-//    var editor = sharedPreference.edit()
+    val sharedPreference = context.getSharedPreferences("myShared", Context.MODE_PRIVATE)
+//    val editor = sharedPreference.edit()
+//    editor.putBoolean("isLogged", false)
+//    editor.apply()
+    val isLogged =
+        context.getSharedPreferences("myShared", Context.MODE_PRIVATE).getBoolean("isLogged", false)
 
     Column(
 
@@ -73,17 +89,37 @@ fun Splash() {
         ) {}
         LottieAnimation(composition = animation)
         LaunchedEffect(key1 = true) {
-
+            Log.d("ISLOG", isLogged.toString())
             delay(10000L)
+            if (isLogged) {
+                iC.putExtra("uid", sharedPreference.getString("userID", ""))
+                iC.putExtra("userPhoto", sharedPreference.getString("uPhoto", ""))
+                iC.putExtra("userName", sharedPreference.getString("uName", ""))
+                iC.putExtra("userEmail", sharedPreference.getString("uEmail", ""))
+                context.startActivity(iC)
+            } else {
 
-            context.startActivity(iM)
-
+                context.startActivity(iM)
+            }
+//            context.startActivity(iM)
         }
 
 
     }
 
 }
+
+//fun isLogged(): Boolean {
+//
+//
+//    sharedPreference = context.getSharedPreferences("myShared", Context.MODE_PRIVATE)
+//
+//
+//    is_logged = sharedPreference.getBoolean("isLogged", false)
+//
+//    return is_logged
+//
+//}
 
 @Preview(showBackground = true)
 @Composable

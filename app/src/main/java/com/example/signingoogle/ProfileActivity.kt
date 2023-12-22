@@ -1,6 +1,9 @@
 package com.example.signingoogle
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import android.os.Bundle
 import android.widget.Space
 import android.widget.Toast
@@ -31,6 +34,9 @@ import com.example.signingoogle.ui.theme.SignInGoogleTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
+private lateinit var sharedPreferences: SharedPreferences
+private lateinit var editor: Editor
+
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +57,12 @@ class ProfileActivity : ComponentActivity() {
                     val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
                     val context = LocalContext.current
                     val i = Intent(context, MainActivity::class.java)
+
+                    sharedPreferences =
+                        context.getSharedPreferences("myShared", Context.MODE_PRIVATE)
+
+                    editor = sharedPreferences.edit()
+
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
@@ -74,9 +86,15 @@ class ProfileActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(30.dp))
                         Button(onClick = {
 
+                            editor.putBoolean("isLogged", false)
+
+                            editor.apply()
+
                             mGoogleSignInClient.signOut()
 
-                            Toast.makeText(context,"Successfully signed out!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Successfully signed out!", Toast.LENGTH_SHORT)
+                                .show()
+
 
                             context.startActivity(i)
 
