@@ -9,8 +9,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -82,72 +85,80 @@ class ContactActivity : ComponentActivity() {
                         }
 
                     })
+                    Column(modifier = Modifier.fillMaxSize()) {
 
-                    LazyColumn() {
-                        items(userList) {
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(10.dp)
-                                    .clickable {
-                                        val i = Intent(
-                                            this@ContactActivity,
-                                            MessageActivity::class.java
-                                        )
-                                        i.putExtra("uid", uid)
-                                        i.putExtra("useruid", it.uid)
-                                        startActivity(i)
-                                    },
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+
+
+                            IconButton(onClick = {
+                                val i = Intent(
+                                    this@ContactActivity,
+                                    ProfileActivity::class.java
+                                )
+                                i.putExtra("user_photo", userPhoto)
+                                i.putExtra("user_name", userName)
+                                i.putExtra("user_email", userEmail)
+                                startActivity(i)
+                            }) {
                                 AsyncImage(
                                     model = ImageRequest.Builder(LocalContext.current)
-                                        .data(it.photo)
+                                        .data(userPhoto)
                                         .crossfade(true)
                                         .build(),
                                     placeholder = painterResource(R.drawable.user),
                                     contentDescription = ("no image"),
                                     contentScale = ContentScale.Crop,
-                                    modifier = Modifier.clip(CircleShape)
+                                    modifier = Modifier.clip(CircleShape),
+                                    alignment = Alignment.TopEnd
                                 )
-                                Text(
-                                    text = it.name ?: "",
-                                    Modifier.padding(start = 12.dp),
-                                    fontSize = 22.sp
-                                )
+                            }
+
+                            Text(
+                                text = "Welcome, $userName",
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        LazyColumn() {
+                            items(userList) {
+                                Row(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(10.dp)
+                                        .clickable {
+                                            val i = Intent(
+                                                this@ContactActivity,
+                                                MessageActivity::class.java
+                                            )
+                                            i.putExtra("uid", uid)
+                                            i.putExtra("useruid", it.uid)
+                                            startActivity(i)
+                                        },
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    AsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data(it.photo)
+                                            .crossfade(true)
+                                            .build(),
+                                        placeholder = painterResource(R.drawable.user),
+                                        contentDescription = ("no image"),
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.clip(CircleShape)
+                                    )
+                                    Text(
+                                        text = it.name ?: "",
+                                        Modifier.padding(start = 12.dp),
+                                        fontSize = 22.sp
+                                    )
+                                }
                             }
                         }
                     }
-
-                    Column(
-                        verticalArrangement = Arrangement.Top,
-                        horizontalAlignment = Alignment.End,
-                        modifier = Modifier.wrapContentSize()
-                    ) {
-                        IconButton(onClick = {
-                            val i = Intent(
-                                this@ContactActivity,
-                                ProfileActivity::class.java
-                            )
-                            i.putExtra("user_photo", userPhoto)
-                            i.putExtra("user_name", userName)
-                            i.putExtra("user_email", userEmail)
-                            startActivity(i)
-                        }) {
-                            AsyncImage(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(userPhoto)
-                                    .crossfade(true)
-                                    .build(),
-                                placeholder = painterResource(R.drawable.user),
-                                contentDescription = ("no image"),
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.clip(CircleShape),
-                                alignment = Alignment.TopEnd
-                            )
-                        }
-                    }
-
                 }
             }
         }
