@@ -73,8 +73,6 @@ class MainActivity : ComponentActivity() {
                         Button(onClick = {
 
                             val signInIntent = mGoogleSignInClient.signInIntent
-                            Toast.makeText(context, "Successfully signed in!", Toast.LENGTH_SHORT)
-                                .show()
                             startActivityForResult(signInIntent, 1)
 
                         }) {
@@ -129,6 +127,8 @@ class MainActivity : ComponentActivity() {
                     editor.putString("uName", userData.name)
                     editor.putString("uEmail", userData.email)
                     editor.apply()
+                    Toast.makeText(context, "Successfully signed in!", Toast.LENGTH_SHORT)
+                        .show()
                     val reference = Firebase.database.reference.child("users")
                     var b = true
                     reference.addValueEventListener(object : ValueEventListener {
