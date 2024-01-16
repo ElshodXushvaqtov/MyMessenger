@@ -53,6 +53,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import com.google.firebase.messaging.RemoteMessage
+import okhttp3.internal.notify
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -67,6 +69,7 @@ class MessageActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val notification = Notification()
                     val messageList = remember {
                         mutableStateListOf(Message())
                     }
@@ -184,7 +187,6 @@ class MessageActivity : ComponentActivity() {
                                         .child(uid)
                                         .child(key)
                                         .setValue(m)
-
                                     text.value = TextFieldValue("")
                                 }
                             ))
@@ -205,6 +207,8 @@ class MessageActivity : ComponentActivity() {
                                 .setValue(m)
 
                             text.value = TextFieldValue("")
+
+
                         })
                         {
                             Text(text = "send")
