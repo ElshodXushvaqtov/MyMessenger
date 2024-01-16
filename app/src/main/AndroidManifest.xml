@@ -42,6 +42,24 @@
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.SignInGoogle"/>
+        <service
+            android:name=".Notification"
+            android:exported="false">
+            <intent-filter>
+                <action
+                    android:name="com.google.firebase.MESSAGING_EVENT">
+                </action>
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="CHANNEL_ID" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/teal_200" />
     </application>
 
 </manifest>
